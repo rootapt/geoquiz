@@ -48,6 +48,7 @@ fun GeoQuizApp(modifier: Modifier = Modifier) {
     var answered by remember { mutableStateOf(false) }
 
     val currentQuestion = questions[currentIndex]
+    val isLastQuestion = currentIndex == questions.lastIndex
 
     Column(
         modifier = modifier
@@ -108,6 +109,7 @@ fun GeoQuizApp(modifier: Modifier = Modifier) {
                         answered = false
                     }
                 },
+                enabled = !isLastQuestion,
                 modifier = Modifier
                     .width(150.dp)
                     .height(56.dp),
