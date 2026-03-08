@@ -94,5 +94,28 @@ fun GeoQuizApp(modifier: Modifier = Modifier) {
                 Text("False", color = Color.White)
             }
         }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Button(
+                onClick = {
+                    if (currentIndex < questions.lastIndex) {
+                        currentIndex++
+                        answered = false
+                    }
+                },
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(56.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+            ) {
+                Text("Next >", color = Color.White)
+            }
+        }
     }
 }
