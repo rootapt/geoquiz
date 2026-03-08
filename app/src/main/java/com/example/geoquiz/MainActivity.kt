@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.geoquiz.ui.theme.GeoquizTheme
 
 class MainActivity : ComponentActivity() {
@@ -45,10 +46,20 @@ fun GeoQuizApp(modifier: Modifier = Modifier) {
     )
 
     var currentIndex by remember { mutableStateOf(0) }
+    var score by remember { mutableStateOf(0) }
     var answered by remember { mutableStateOf(false) }
+    var showResultDialog by remember { mutableStateOf(false) }
 
     val currentQuestion = questions[currentIndex]
     val isLastQuestion = currentIndex == questions.lastIndex
+
+    // Функция для сброса теста
+    fun resetQuiz() {
+        currentIndex = 0
+        score = 0
+        answered = false
+        showResultDialog = false
+    }
 
     Column(
         modifier = modifier
@@ -69,7 +80,11 @@ fun GeoQuizApp(modifier: Modifier = Modifier) {
         ) {
             Button(
                 onClick = {
+                    if (currentQuestion.answer) score++
                     answered = true
+                    if (isLastQuestion) {
+                        showResultDialog = true
+                    }
                 },
                 enabled = !answered,
                 modifier = Modifier
@@ -83,7 +98,11 @@ fun GeoQuizApp(modifier: Modifier = Modifier) {
 
             Button(
                 onClick = {
+                    if (!currentQuestion.answer) score++
                     answered = true
+                    if (isLastQuestion) {
+                        showResultDialog = true
+                    }
                 },
                 enabled = !answered,
                 modifier = Modifier
@@ -102,6 +121,7 @@ fun GeoQuizApp(modifier: Modifier = Modifier) {
                 .padding(top = 16.dp),
             horizontalArrangement = Arrangement.End
         ) {
+            // Кнопка Next справа
             Button(
                 onClick = {
                     if (currentIndex < questions.lastIndex) {
@@ -117,6 +137,44 @@ fun GeoQuizApp(modifier: Modifier = Modifier) {
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
             ) {
                 Text("Next >", color = Color.White)
+            }
+        }
+    }
+
+    if (showResultDialog) {
+        Dialog(onDismissRequest = { }) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Your Result",
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    Text(
+                        text = "Correct answers: $score / ${questions.size}",
+                        fontSize = 18.sp,
+                        modifier = Modifier.padding(bottom = 24.dp)
+                    )
+
+                    Button(
+                        onClick = {
+                            resetQuiz()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.width(200.dp)
+                    ) {
+                        Text("Try Again", color = Color.White)
+                    }
+                }
             }
         }
     }
