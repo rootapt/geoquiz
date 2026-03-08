@@ -40,7 +40,6 @@ fun GeoQuizApp(modifier: Modifier = Modifier) {
         Question("The Amazon River is the longest river in the Americas.", true),
         Question("Lake Baikal is the world's oldest and deepest freshwater lake.", true)
     )
-
     var currentIndex by remember { mutableStateOf(0) }
     val currentQuestion = questions[currentIndex]
 
